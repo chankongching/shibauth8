@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Contains shibauth8.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+/**
+ * Implements hook_help().
+ */
+function shibauth8_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+  //todo
+}
+
+function shibauth8_user_delete(Drupal\Core\Entity\EntityInterface $entity) {
+
+  //this funciton will be deprecated in drupal 9
+  db_delete('shib_authmap')
+    ->condition('uid', $entity->id())
+    ->execute();
+}

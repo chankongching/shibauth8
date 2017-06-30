@@ -1,0 +1,8 @@
+shibauth8.general:
+  title: 'Shibboleth Settings'
+  route_name: shibauth8.shibboleth_settings
+  base_route: shibauth8.shibboleth_settings
+shibauth8.advanced:
+  title: 'Advanced Settings'
+  route_name: shibauth8.advanced_settings
+  base_route: shibauth8.shibboleth_settings

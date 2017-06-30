@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the shibauth8 module.
+ */
+
+/**
+ * Implements hook_schema().
+ *
+ * Defines the database tables used by this module.
+ *
+ * @see hook_schema()
+ *
+ * @ingroup shibauth8
+ */
+function shibauth8_schema() {
+  $schema['shib_authmap'] = array(
+    'description' => 'Store Shibboleth User information.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique ID.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Creator user's {users}.uid",
+      ),
+      'targeted_id' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "User's Targeted Id",
+      ),
+      'idp' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => "User's IDP",
+      ),
+      'consentver' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => "User's consent version",
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'created date',
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'uid' => array('uid'),
+      'targeted_id' => array('targeted_id'),
+      'idp' => array('idp'),
+      'created' => array('created'),
+    ),
+  );
+
+  $schema['shib_auth'] = array(
+    'description' => 'Store Shibboleth User role information.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique ID.',
+      ),
+      'field' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => "Field",
+      ),
+      'regexpression' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => "Regular Expression",
+      ),
+      'role' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => "User's consent version",
+      ),
+      'sitcky' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'Sticky Role',
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'field' => array('field'),
+      'role' => array('role'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * delete the shib_authmap and shib_auth database tables on uninstall
+ */
+//function shibauth8_uninstall(){
+//  $options['target'] = 'default';
+//  \Drupal\Core\Database\Database::getConnection($options['target'])->delete('shib_authmap', $options);
+//  \Drupal\Core\Database\Database::getConnection($options['target'])->delete('shib_auth', $options);
+//}

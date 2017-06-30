@@ -1,0 +1,8 @@
+shibauth8.shibbolethsettings:
+  type: config_object
+  label: 'Shibboleth Settings'
+
+shibauth8.advancedsettings:
+  type: config_object
+  label: 'Advanced Settings'
+

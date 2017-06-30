@@ -1,0 +1,53 @@
+
+shibauth8.shibboleth_settings:
+  path: '/admin/config/shibauth8/settings'
+  defaults:
+    _form: '\Drupal\shibauth8\Form\ShibbolethSettings'
+    _title: 'Shibboleth Settings'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+
+shibauth8.advanced_settings:
+  path: '/admin/config/shibauth8/settings/advanced'
+  defaults:
+    _form: '\Drupal\shibauth8\Form\AdvancedSettings'
+    _title: 'Advanced Settings'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+
+shibauth8.logout_controller_logout:
+  path: '/shibauth8/logout'
+  defaults:
+    _controller: '\Drupal\shibauth8\Controller\LogoutController::logout'
+    _title: 'logout'
+  requirements:
+    _permission: 'access content'
+
+shibauth8.logout_controller_logout_error:
+  path: '/shibauth8/logout/error'
+  defaults:
+    _controller: '\Drupal\shibauth8\Controller\LogoutController::logoutError'
+    _title: 'logout'
+  requirements:
+    _permission: 'access content'
+
+shibauth8.logout_controller_logout_error_page:
+  path: '/shibauth8/logout/error/message'
+  defaults:
+    _controller: '\Drupal\shibauth8\Controller\LogoutController::logoutErrorPage'
+    _title: 'An Error has Occurred'
+  requirements:
+    _permission: 'access content'
+
+shibauth8.custom_email_form:
+  path: '/shibauth8/form/custom_email'
+  defaults:
+    _form: '\Drupal\shibauth8\Form\CustomEmailForm'
+    _title: 'Email Address'
+  requirements:
+    _access: 'TRUE'
+

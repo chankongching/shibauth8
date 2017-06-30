@@ -1,0 +1,28 @@
+services:
+  shibauth8.login_handler:
+    class: Drupal\shibauth8\Login\LoginHandler
+    arguments: ['@database', '@shibauth8.config', '@shibauth8.advanced_config', '@entity_type.manager', '@shibauth8.shib_session_vars', '@logger.channel.shibauth8', '@user.private_tempstore', '@session_manager', '@current_user']
+
+  shibauth8.shib_session_vars:
+      class: Drupal\shibauth8\Login\ShibSessionVars
+      arguments: ['@shibauth8.config']
+
+  shibauth8.event_subscriber:
+    class: Drupal\shibauth8\EventSubscriber\ShibAuth8Subscriber
+    arguments: ['@shibauth8.login_handler']
+    tags:
+      - {name: event_subscriber}
+
+  shibauth8.config:
+    class: \Drupal\Core\Config\ImmutableConfig
+    factory: config.factory:get
+    arguments: ['shibauth8.shibbolethsettings']
+
+  shibauth8.advanced_config:
+    class: \Drupal\Core\Config\ImmutableConfig
+    factory: config.factory:get
+    arguments: ['shibauth8.advancedsettings']
+
+  logger.channel.shibauth8:
+      parent: logger.channel_base
+      arguments: ['shibauth8']

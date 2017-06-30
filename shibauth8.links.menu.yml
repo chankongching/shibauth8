@@ -1,0 +1,6 @@
+shibauth8.shibboleth_settings:
+  title: 'Shibboleth Settings'
+  route_name: shibauth8.shibboleth_settings
+  description: 'Shibboleth configuration form'
+  parent: system.admin_config_system
+  weight: 99

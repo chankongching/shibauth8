@@ -1,0 +1,5 @@
+name: shibauth8
+type: module
+description: Shibboleth authentication module for Drupal 8
+core: 8.x
+package: Shibboleth
