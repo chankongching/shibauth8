@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -23,4 +25,27 @@ function shibauth8_user_delete(Drupal\Core\Entity\EntityInterface $entity) {
   db_delete('shib_authmap')
     ->condition('uid', $entity->id())
     ->execute();
+}
+
+/**
+ * Get the Shibboleth login link.
+ *
+ * @return \Drupal\Core\GeneratedLink
+ */
+function shibauth8_get_login_link() {
+  $config = \Drupal::config('shibauth8.shibbolethsettings');
+  $url = Url::fromUri($config->get('shibboleth_login_handler_url'));
+  $link_text = $config->get('shibboleth_login_link_text');
+  return Link::fromTextAndUrl($link_text, $url)->toString();
+}
+
+/**
+ * Get the Shibboleth logout link.
+ *
+ * @return \Drupal\Core\GeneratedLink
+ */
+function shibauth8_get_logout_link() {
+  $host = \Drupal::request()->getHost();
+  $url = Url::fromUri('//' . $host . '/shibauth8/logout');
+  return Link::fromTextAndUrl(t('Shibboleth Logout'), $url)->toString();
 }
