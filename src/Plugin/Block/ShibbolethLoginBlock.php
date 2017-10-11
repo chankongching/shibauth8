@@ -3,8 +3,6 @@
 namespace Drupal\shibauth8\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Link;
-use Drupal\Core\Url;
 
 /**
  * Provides a 'ShibbolethLoginBlock' block.
@@ -21,18 +19,28 @@ class ShibbolethLoginBlock extends BlockBase {
    */
   public function build() {
 
-    $config = \Drupal::config('shibauth8.shibbolethsettings');
-    $url = Url::fromUri($config->get('shibboleth_login_handler_url'));
-    $link_text = $config->get('shibboleth_login_link_text');
-    $build['shibboleth_login_block']['#markup'] = Link::fromTextAndUrl(t($link_text), $url)->toString();
+    $current_user = \Drupal::currentUser();
 
-    $build['shibboleth_login_block']['#markup'] .= '<br />';
+    $markup = '<div class="shibboleth-links">';
+    if (!$current_user->id()) {
+      $markup .= '<div class="shibboleth-login">' . shibauth8_get_login_link() . '</div>';
+    }
+    else {
+      $markup .= '<div class="shibboleth-logout">' . shibauth8_get_logout_link() . '</div>';
+    }
+    $markup .= '</div>';
 
-    $host = \Drupal::request()->getHost();
-    $url = Url::fromUri('http://' . $host . '/shibauth8/logout');
-    $build['shibboleth_login_block']['#markup'] .= Link::fromTextAndUrl(t('Shibboleth Logout'), $url)->toString();
+    $build['shibboleth_login_block'] = [
+      '#markup' => $markup,
+      '#cache' => [
+        'contexts' => [
+          'user.roles:anonymous',
+        ],
+      ],
+    ];
 
     return $build;
+
   }
 
 }
