@@ -28,6 +28,25 @@ function shibauth8_user_delete(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function shibauth8_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+  if ($form_id != 'user_login_form') {
+    return;
+  }
+
+  // Add Shibboleth link to form.
+  $form['shibboleth_login_block'] = [
+    '#weight' => -10,
+    '#markup' => '<div class="shibboleth-login">'
+      . shibauth8_get_login_link()
+      . '</div>',
+  ];
+
+}
+
+/**
  * Get the Shibboleth login link.
  *
  * @return \Drupal\Core\GeneratedLink
