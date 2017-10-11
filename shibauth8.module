@@ -20,9 +20,9 @@ function shibauth8_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $r
 }
 
 function shibauth8_user_delete(Drupal\Core\Entity\EntityInterface $entity) {
-
-  //this funciton will be deprecated in drupal 9
-  db_delete('shib_authmap')
+  /** @var \Drupal\Core\Database\Connection $db */
+  $db = \Drupal::service('database');
+  $db->delete('shib_authmap')
     ->condition('uid', $entity->id())
     ->execute();
 }
