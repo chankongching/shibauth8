@@ -52,16 +52,36 @@ function shibauth8_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form
  * @return \Drupal\Core\GeneratedLink
  */
 function shibauth8_get_login_link() {
+
   $config = \Drupal::config('shibauth8.shibbolethsettings');
   $url = $config->get('shibboleth_login_handler_url');
-  if (parse_url($url, PHP_URL_HOST)) {
-    $url = Url::fromUri($url);
+  $link_text = $config->get('shibboleth_login_link_text');
+
+  $config = \Drupal::config('shibauth8.advancedsettings');
+  $redirect = $config->get('url_redirect_login');
+
+  if ($redirect) {
+    $redirect = Url::fromUserInput($redirect, ['absolute' => TRUE])->toString();
   }
   else {
-    $url = Url::fromUserInput($url);
+    // Not set, use current page.
+    $redirect = \Drupal\Core\Url::fromRoute('<current>', [], ['absolute' => TRUE])->toString();
   }
-  $link_text = $config->get('shibboleth_login_link_text');
+  $options = [
+    'query' => [
+      'target' => $redirect,
+    ],
+  ];
+
+  if (parse_url($url, PHP_URL_HOST)) {
+    $url = Url::fromUri($url, $options);
+  }
+  else {
+    $url = Url::fromUserInput($url, $options);
+  }
+
   return Link::fromTextAndUrl($link_text, $url)->toString();
+
 }
 
 /**

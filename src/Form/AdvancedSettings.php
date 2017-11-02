@@ -32,7 +32,9 @@ class AdvancedSettings extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
     $config = $this->config('shibauth8.advancedsettings');
+
 //    $form['strict_shibboleth_session_checking'] = array(
 //      '#type' => 'details',
 //      '#title' => t('Strict Shibboleth Session Checking'),
@@ -68,6 +70,21 @@ class AdvancedSettings extends ConfigFormBase {
 //      '#size' => 10,
 //      '#default_value' => $config->get('document_version'),
 //    ];
+
+    $form['login_settings'] = array(
+      '#type' => 'details',
+      '#title' => t('Login Settings'),
+      '#open' => 'open',
+    );
+    $form['login_settings']['url_redirect_login'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('URL to redirect to after login'),
+      '#description' => $this->t('The URL can be absolute or relative to the server base url. The relative paths will be automatically extended with the site base URL. If this value is empty, then the user will be redirected to the originally requested page.'),
+      '#maxlength' => 128,
+      '#size' => 64,
+      '#default_value' => $config->get('url_redirect_login'),
+    ];
+
     $form['logout_settings'] = array(
       '#type' => 'details',
       '#title' => t('Logout Settings'),
@@ -85,22 +102,10 @@ class AdvancedSettings extends ConfigFormBase {
       '#type' => 'textarea',
       '#title' => $this->t('Error Page Message'),
       '#default_value' => $config->get('logout_error_message'),
-      '#description' => $this->t('Error message displayed to the user if an error occurs)'),
+      '#description' => $this->t('Error message displayed to the user (if an error occurs).'),
 
     ];
-//    $form['login_settings'] = array(
-//      '#type' => 'details',
-//      '#title' => t('Login Settings'),
-//      '#open' => 'open',
-//    );
-//    $form['login_settings']['url_redirect_login'] = [
-//      '#type' => 'textfield',
-//      '#title' => $this->t('URL to redirect to after login'),
-//      '#description' => $this->t('The URL can be absolute or relative to the server base url. The relative paths will be automatically extended with the site base URL. If this value is empty, then the user will be redirected to the originally requested page.'),
-//      '#maxlength' => 128,
-//      '#size' => 64,
-//      '#default_value' => $config->get('url_redirect_login'),
-//    ];
+
 //    $form['advanced_saml2_settings'] = array(
 //      '#type' => 'details',
 //      '#title' => t('Advanced SAML2 Settings'),
@@ -118,7 +123,9 @@ class AdvancedSettings extends ConfigFormBase {
 //      '#description' => $this->t('Enable forced authentication'),
 //      '#default_value' => $config->get('enable_forced_authentication'),
 //    ];
+
     return parent::buildForm($form, $form_state);
+
   }
 
   /**
@@ -141,7 +148,7 @@ class AdvancedSettings extends ConfigFormBase {
 //      ->set('document_version', $form_state->getValue('document_version'))
       ->set('url_redirect_logout', $form_state->getValue('url_redirect_logout'))
       ->set('logout_error_message', $form_state->getValue('logout_error_message'))
-//      ->set('url_redirect_login', $form_state->getValue('url_redirect_login'))
+      ->set('url_redirect_login', $form_state->getValue('url_redirect_login'))
 //      ->set('enable_passive_authentication', $form_state->getValue('enable_passive_authentication'))
 //      ->set('enable_forced_authentication', $form_state->getValue('enable_forced_authentication'))
       ->save();
