@@ -47,6 +47,9 @@ class ShibAuth8Subscriber implements EventSubscriberInterface {
    */
   public function checkForShibbolethSession(GetResponseEvent $event) {
 
+    // Show debug messages, if needed.
+    shibauth8_debug();
+
     // Check if there is currently an active shibboleth session.
     // Don't initiate session on the excluded urls.
     $cur_route = \Drupal::routeMatch()->getRouteName();
