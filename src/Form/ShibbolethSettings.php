@@ -118,24 +118,25 @@ class ShibbolethSettings extends ConfigFormBase {
 //      '#size' => 64,
 //      '#default_value' => $config->get('shibboleth_account_linking_text'),
 //    ];
-//    $form['debugging_options'] = array(
-//      '#type' => 'details',
-//      '#title' => t('Debugging Options'),
-//      '#open' => 'open',
-//    );
-//    $form['debugging_options']['enable_debug_mode'] = [
-//      '#type' => 'checkbox',
-//      '#title' => $this->t('Enable DEBUG mode.'),
-//      '#default_value' => $config->get('enable_debug_mode'),
-//    ];
-//    $form['debugging_options']['debug_prefix_path'] = [
-//      '#type' => 'textfield',
-//      '#title' => $this->t('DEBUG path prefix'),
-//      '#description' => $this->t("For example use \'user/\' for display DEBUG messages on paths \'user/*\'!"),
-//      '#maxlength' => 128,
-//      '#size' => 64,
-//      '#default_value' => $config->get('debug_prefix_path'),
-//    ];
+
+    $form['debugging_options'] = array(
+      '#type' => 'details',
+      '#title' => t('Debugging Options'),
+      '#open' => 'open',
+    );
+    $form['debugging_options']['enable_debug_mode'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable DEBUG mode.'),
+      '#default_value' => $config->get('enable_debug_mode'),
+    ];
+    $form['debugging_options']['debug_prefix_path'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('DEBUG path prefix'),
+      '#description' => $this->t("For example, use \"/user/\" to display DEBUG messages on paths like \"/user/*\"."),
+      '#maxlength' => 128,
+      '#size' => 64,
+      '#default_value' => $config->get('debug_prefix_path'),
+    ];
     return parent::buildForm($form, $form_state);
   }
 
@@ -163,8 +164,8 @@ class ShibbolethSettings extends ConfigFormBase {
 //      ->set('user_defined_email', $form_state->getValue('user_defined_email'))
 //      ->set('account_linking', $form_state->getValue('account_linking'))
 //      ->set('shibboleth_account_linking_text', $form_state->getValue('shibboleth_account_linking_text'))
-//      ->set('enable_debug_mode', $form_state->getValue('enable_debug_mode'))
-//      ->set('debug_prefix_path', $form_state->getValue('debug_prefix_path'))
+      ->set('enable_debug_mode', $form_state->getValue('enable_debug_mode'))
+      ->set('debug_prefix_path', $form_state->getValue('debug_prefix_path'))
       ->save();
 
 
