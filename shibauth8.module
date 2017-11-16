@@ -12,11 +12,8 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-/**
- * Implements hook_help().
- */
 function shibauth8_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
-  //todo
+  // @todo - add help.
 }
 
 function shibauth8_user_delete(Drupal\Core\Entity\EntityInterface $entity) {

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains AdvancedSettings class for configuration.
+ */
+
 namespace Drupal\shibauth8\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

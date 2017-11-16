@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains LoadTest class.
+ */
+
 namespace Drupal\shibauth8\Tests;
 
 use Drupal\Core\Url;
@@ -10,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group shibauth8
  */
-class LoadTest extends WebTestBase{
+class LoadTest extends WebTestBase {
 
   /**
    * Modules to enable.

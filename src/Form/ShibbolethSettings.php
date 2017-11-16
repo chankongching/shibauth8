@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains ShibbolethSettings class for configuration.
+ */
+
 namespace Drupal\shibauth8\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -33,7 +38,6 @@ class ShibbolethSettings extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('shibauth8.shibbolethsettings');
-    //var_dump($this->config('shibauth8.shibbolethsettings')); die;
     $form['shibboleth_handler_settings'] = array(
       '#type' => 'details',
       '#title' => t('Shibboleth Handler Settings'),

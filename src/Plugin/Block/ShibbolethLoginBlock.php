@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains ShibbolethLoginBlock class to define block.
+ */
+
 namespace Drupal\shibauth8\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

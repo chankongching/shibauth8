@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains CustomEmailForm class for configuration.
+ */
+
 namespace Drupal\shibauth8\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -32,6 +37,14 @@ class CustomEmailForm extends FormBase {
   protected $current_user;
   protected $custom_email_store;
 
+  /**
+   * CustomEmailForm constructor.
+   *
+   * @param \Drupal\shibauth8\Login\ShibSessionVars $shib_session
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\Session\SessionManagerInterface $session_manager
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   */
   public function __construct(ShibSessionVars $shib_session, PrivateTempStoreFactory $temp_store_factory, SessionManagerInterface $session_manager, AccountInterface $current_user) {
     $this->shib_session = $shib_session;
     $this->temp_store_factory = $temp_store_factory;
@@ -41,6 +54,9 @@ class CustomEmailForm extends FormBase {
     $this->custom_email_store = $this->temp_store_factory->get('shibauth8');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('shibauth8.shib_session_vars'),
@@ -89,15 +105,16 @@ class CustomEmailForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    //Start Session if it does not exist yet
+    // Start Session if it does not exist yet.
     if ($this->current_user->isAnonymous() && !isset($_SESSION['session_started'])) {
       $_SESSION['session_started'] = TRUE;
       $this->session_manager->start();
     }
 
-    //Add custom Email to the session
+    // Add custom Email to the session.
     $this->custom_email_store->set('custom_email', $form_state->getValue('email'));
-    //Redirect
+
+    // Redirect.
     $form_state->setRedirectUrl(Url::fromUri(\Drupal::request()
         ->getSchemeAndHttpHost() . $this->custom_email_store->get('return_url')));
   }

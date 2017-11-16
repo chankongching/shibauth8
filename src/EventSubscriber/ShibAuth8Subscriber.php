@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains ShibAuth8Subscriber.
+ */
+
 namespace Drupal\shibauth8\EventSubscriber;
 
 use Drupal\Core\Url;
@@ -12,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class ShibAuth8Subscriber
+ *
  * @package Drupal\shibauth8\EventSubscriber
  */
 class ShibAuth8Subscriber implements EventSubscriberInterface {
@@ -28,6 +34,7 @@ class ShibAuth8Subscriber implements EventSubscriberInterface {
 
   /**
    * ShibAuth8Subscriber constructor.
+   *
    * @param \Drupal\shibauth8\Login\LoginHandler $lh
    */
   public function __construct(LoginHandler $lh){
@@ -40,15 +47,15 @@ class ShibAuth8Subscriber implements EventSubscriberInterface {
    */
   public function checkForShibbolethSession(GetResponseEvent $event) {
 
-    //Check if there is currently an active shibboleth session
-    //Don't initiate session on the excluded urls
+    // Check if there is currently an active shibboleth session.
+    // Don't initiate session on the excluded urls.
     $cur_route = \Drupal::routeMatch()->getRouteName();
 
-    if(!in_array($cur_route, $this->excluded_routes)) {
+    if (!in_array($cur_route, $this->excluded_routes)) {
       if (!empty($this->lh->getShibSession()->getSessionId())) {
-        //Check if there is an active drupal login
+        // Check if there is an active drupal login.
         if (\Drupal::currentUser()->isAnonymous()) {
-          //Call the shib login function in the login handler class
+          // Call the shib login function in the login handler class.
           $this->lh->shibLogin();
         }
       }
