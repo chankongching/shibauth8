@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package Drupal\shibauth8\Form
  */
-class CustomEmailForm extends FormBase {
+class CustomDataForm extends FormBase {
 
   /**
    * Symfony\Component\ClassLoader\ApcClassLoader definition.
@@ -70,7 +70,7 @@ class CustomEmailForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'custom_email_form';
+    return 'custom_data_form';
   }
 
   /**

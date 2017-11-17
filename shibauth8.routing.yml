@@ -44,10 +44,10 @@ shibauth8.logout_controller_logout_error_page:
     _permission: 'access content'
 
 shibauth8.custom_email_form:
-  path: '/shibauth8/form/custom_email'
+  path: '/shibauth8/get_custom_data'
   defaults:
-    _form: '\Drupal\shibauth8\Form\CustomEmailForm'
-    _title: 'Email Address'
+    _form: '\Drupal\shibauth8\Form\CustomDataForm'
+    _title: 'Customize Drupal user attributes'
   requirements:
     _access: 'TRUE'
 
