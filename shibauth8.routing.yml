@@ -1,6 +1,6 @@
 
 shibauth8.shibboleth_settings:
-  path: '/admin/config/shibauth8/settings'
+  path: '/admin/config/people/shibauth8'
   defaults:
     _form: '\Drupal\shibauth8\Form\ShibbolethSettings'
     _title: 'Shibboleth Settings'
@@ -10,7 +10,7 @@ shibauth8.shibboleth_settings:
     _admin_route: TRUE
 
 shibauth8.advanced_settings:
-  path: '/admin/config/shibauth8/settings/advanced'
+  path: '/admin/config/people/shibauth8/advanced'
   defaults:
     _form: '\Drupal\shibauth8\Form\AdvancedSettings'
     _title: 'Advanced Settings'
