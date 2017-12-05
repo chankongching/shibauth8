@@ -67,12 +67,12 @@ class ShibbolethSettings extends ConfigFormBase {
       '#size' => 64,
       '#default_value' => $config->get('shibboleth_login_link_text'),
     ];
-//    $form['shibboleth_handler_settings']['force_https_on_login'] = [
-//      '#type' => 'checkbox',
-//      '#title' => $this->t('Force HTTPS on login'),
-//      '#description' => $this->t('The user will be redirected to HTTPS'),
-//      '#default_value' => $config->get('force_https_on_login'),
-//    ];
+    $form['shibboleth_handler_settings']['force_https_on_login'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Force HTTPS on login'),
+      '#description' => $this->t('The user will be redirected to HTTPS'),
+      '#default_value' => $config->get('force_https_on_login'),
+    ];
     $form['attribute_settings'] = array(
       '#type' => 'details',
       '#title' => t('Attribute Settings'),
@@ -157,7 +157,7 @@ class ShibbolethSettings extends ConfigFormBase {
       ->set('shibboleth_login_handler_url', $form_state->getValue('shibboleth_login_handler_url'))
       ->set('shibboleth_logout_handler_url', $form_state->getValue('shibboleth_logout_handler_url'))
       ->set('shibboleth_login_link_text', $form_state->getValue('shibboleth_login_link_text'))
-//      ->set('force_https_on_login', $form_state->getValue('force_https_on_login'))
+      ->set('force_https_on_login', $form_state->getValue('force_https_on_login'))
       ->set('server_variable_username', $form_state->getValue('server_variable_username'))
       ->set('server_variable_email', $form_state->getValue('server_variable_email'))
 //      ->set('user_defined_usernames', $form_state->getValue('user_defined_usernames'))
