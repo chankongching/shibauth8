@@ -54,6 +54,7 @@ function shibauth8_get_login_link() {
   $config = \Drupal::config('shibauth8.shibbolethsettings');
   $url = $config->get('shibboleth_login_handler_url');
   $link_text = $config->get('shibboleth_login_link_text');
+  $force_https = $config->get('force_https_on_login');
 
   $config = \Drupal::config('shibauth8.advancedsettings');
   $redirect = $config->get('url_redirect_login');
@@ -65,11 +66,21 @@ function shibauth8_get_login_link() {
     // Not set, use current page.
     $redirect = \Drupal\Core\Url::fromRoute('<current>', [], ['absolute' => TRUE])->toString();
   }
+  if ($force_https) {
+    $redirect = preg_replace('~^http://~', 'https://', $redirect);
+  }
   $options = [
     'query' => [
       'target' => $redirect,
     ],
   ];
+
+  if ($force_https) {
+    $options['https'] = TRUE;
+    if (empty($_SERVER['HTTPS'])) {
+      $options['absolute'] = TRUE;
+    }
+  }
 
   if (parse_url($url, PHP_URL_HOST)) {
     $url = Url::fromUri($url, $options);
