@@ -133,7 +133,14 @@ class LoginHandler implements LoginHandlerInterface {
 
       if ($user_registered) {
         $this->authenticateUser();
+        // We need to redirect when we're done to avoid caching issues.
+        $current_url = Url::fromRoute('<current>')->toString();
+        $response = new RedirectResponse($current_url);
+        // Avoid caching of redirect response object.
+        \Drupal::service('page_cache_kill_switch')->trigger();
+        $response->send();
       }
+
     }
     catch (\Exception $e) {
       // Log the error to drupal log messages.
