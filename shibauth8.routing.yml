@@ -1,6 +1,6 @@
 
 shibauth8.shibboleth_settings:
-  path: '/admin/config/people/shibauth8'
+  path: '/admin/config/people/shib_auth'
   defaults:
     _form: '\Drupal\shibauth8\Form\ShibbolethSettings'
     _title: 'Shibboleth Settings'
@@ -10,7 +10,7 @@ shibauth8.shibboleth_settings:
     _admin_route: TRUE
 
 shibauth8.advanced_settings:
-  path: '/admin/config/people/shibauth8/advanced'
+  path: '/admin/config/people/shib_auth/advanced'
   defaults:
     _form: '\Drupal\shibauth8\Form\AdvancedSettings'
     _title: 'Advanced Settings'
@@ -20,7 +20,7 @@ shibauth8.advanced_settings:
     _admin_route: TRUE
 
 shibauth8.logout_controller_logout:
-  path: '/shibauth8/logout'
+  path: '/shib_logout'
   defaults:
     _controller: '\Drupal\shibauth8\Controller\LogoutController::logout'
     _title: 'logout'
@@ -28,7 +28,7 @@ shibauth8.logout_controller_logout:
     _permission: 'access content'
 
 shibauth8.logout_controller_logout_error:
-  path: '/shibauth8/logout/error'
+  path: '/shib_logout/error'
   defaults:
     _controller: '\Drupal\shibauth8\Controller\LogoutController::logoutError'
     _title: 'logout'
@@ -36,7 +36,7 @@ shibauth8.logout_controller_logout_error:
     _permission: 'access content'
 
 shibauth8.logout_controller_logout_error_page:
-  path: '/shibauth8/logout/error/message'
+  path: '/shib_logout/error/message'
   defaults:
     _controller: '\Drupal\shibauth8\Controller\LogoutController::logoutErrorPage'
     _title: 'An Error has Occurred'
@@ -44,7 +44,7 @@ shibauth8.logout_controller_logout_error_page:
     _permission: 'access content'
 
 shibauth8.custom_email_form:
-  path: '/shibauth8/get_custom_data'
+  path: '/shib_login/get_custom_data'
   defaults:
     _form: '\Drupal\shibauth8\Form\CustomDataForm'
     _title: 'Customize Drupal user attributes'
