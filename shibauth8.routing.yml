@@ -19,6 +19,16 @@ shibauth8.advanced_settings:
   options:
     _admin_route: TRUE
 
+shibauth8.login_controller_login:
+  path: '/shib_login'
+  defaults:
+    _controller: '\Drupal\shibauth8\Controller\LoginController::login'
+    _title: 'Login'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 shibauth8.logout_controller_logout:
   path: '/shib_logout'
   defaults:

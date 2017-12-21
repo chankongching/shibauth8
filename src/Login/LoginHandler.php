@@ -75,6 +75,7 @@ class LoginHandler implements LoginHandlerInterface {
    */
   protected $current_user;
 
+
   /**
    * LoginHandler constructor.
    *
@@ -116,12 +117,11 @@ class LoginHandler implements LoginHandlerInterface {
         // Check if custom email has been set.
         $custom_email = $this->custom_email_store->get('custom_email');
         if (empty($custom_email)) {
-          $this->custom_email_store->set('return_url', \Drupal::request()
-            ->getRequestUri());
+          $this->custom_email_store->set('return_url', \Drupal::destination()->get());
           // Redirect to email form if custom email has not been set.
           $response = new RedirectResponse(Url::fromRoute('shibauth8.custom_email_form')
             ->toString());
-          $response->send();
+          return $response;
         }
         else {
           $user_registered = $this->registerNewUser();
@@ -133,12 +133,7 @@ class LoginHandler implements LoginHandlerInterface {
 
       if ($user_registered) {
         $this->authenticateUser();
-        // We need to redirect when we're done to avoid caching issues.
-        $current_url = Url::fromRoute('<current>')->toString();
-        $response = new RedirectResponse($current_url);
-        // Avoid caching of redirect response object.
-        \Drupal::service('page_cache_kill_switch')->trigger();
-        $response->send();
+        return FALSE;
       }
 
     }
@@ -154,6 +149,9 @@ class LoginHandler implements LoginHandlerInterface {
       // Redirect to shib logout url.
       return new RedirectResponse($this->config->get('shibboleth_logout_handler_url') . $return_url);
     }
+
+    return FALSE;
+
   }
 
   /**
