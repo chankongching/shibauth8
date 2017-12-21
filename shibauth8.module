@@ -67,6 +67,7 @@ function shibauth8_get_login_link() {
     $redirect = \Drupal\Core\Url::fromRoute('<current>')->toString();
   }
   $options = [
+    'absolute' => TRUE,
     'query' => [
       'destination' => $redirect,
     ],
