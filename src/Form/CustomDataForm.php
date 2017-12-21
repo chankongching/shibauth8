@@ -35,7 +35,7 @@ class CustomDataForm extends FormBase {
   protected $temp_store_factory;
   protected $session_manager;
   protected $current_user;
-  protected $custom_email_store;
+  protected $custom_data_store;
 
   /**
    * CustomEmailForm constructor.
@@ -51,7 +51,7 @@ class CustomDataForm extends FormBase {
     $this->session_manager = $session_manager;
     $this->current_user = $current_user;
 
-    $this->custom_email_store = $this->temp_store_factory->get('shibauth8');
+    $this->custom_data_store = $this->temp_store_factory->get('shibauth8');
   }
 
   /**
@@ -82,7 +82,7 @@ class CustomDataForm extends FormBase {
       '#type' => 'email',
       '#title' => $this->t('Email'),
       '#default_value' => (!empty($this->shib_session->getEmail()) ? $this->shib_session->getEmail() : ''),
-      '#description' => 'Please enter a valid email address',
+      '#description' => 'Please enter a valid email address.',
     ];
 
     $form['submit'] = [
@@ -112,11 +112,11 @@ class CustomDataForm extends FormBase {
     }
 
     // Add custom Email to the session.
-    $this->custom_email_store->set('custom_email', $form_state->getValue('email'));
+    $this->custom_data_store->set('custom_email', $form_state->getValue('email'));
 
     // Redirect.
     $form_state->setRedirectUrl(Url::fromUri(\Drupal::request()
-        ->getSchemeAndHttpHost() . $this->custom_email_store->get('return_url')));
+        ->getSchemeAndHttpHost() . $this->custom_data_store->get('return_url')));
   }
 
 }

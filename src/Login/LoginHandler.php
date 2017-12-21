@@ -63,7 +63,7 @@ class LoginHandler implements LoginHandlerInterface {
   /**
    * @var \Drupal\user\PrivateTempStore
    */
-  protected $custom_email_store;
+  protected $custom_data_store;
 
   /**
    * @var \Drupal\Core\Session\SessionManagerInterface
@@ -93,7 +93,7 @@ class LoginHandler implements LoginHandlerInterface {
     $this->temp_store_factory = $temp_store_factory;
     $this->session_manager = $session_manager;
     $this->current_user = $current_user;
-    $this->custom_email_store = $this->temp_store_factory->get('shibauth8');
+    $this->custom_data_store = $this->temp_store_factory->get('shibauth8');
 
     // Start Session if it does not exist yet.
     if ($this->current_user->isAnonymous() && !isset($_SESSION['session_started'])) {
@@ -115,9 +115,9 @@ class LoginHandler implements LoginHandlerInterface {
         $user_registered = FALSE;
 
         // Check if custom email has been set.
-        $custom_email = $this->custom_email_store->get('custom_email');
+        $custom_email = $this->custom_data_store->get('custom_email');
         if (empty($custom_email)) {
-          $this->custom_email_store->set('return_url', \Drupal::destination()->get());
+          $this->custom_data_store->set('return_url', \Drupal::destination()->get());
           // Redirect to email form if custom email has not been set.
           $response = new RedirectResponse(Url::fromRoute('shibauth8.custom_email_form')
             ->toString());
@@ -166,7 +166,7 @@ class LoginHandler implements LoginHandlerInterface {
 
     $user_data = [
       'name' => $this->shib_session->getTargetedId(),
-      'mail' => $this->custom_email_store->get('custom_email'),
+      'mail' => $this->custom_data_store->get('custom_email'),
       'pass' => $this->genPassword(),
       'status' => 1,
     ];
