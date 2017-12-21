@@ -110,14 +110,10 @@ class LoginHandler implements LoginHandlerInterface {
     try {
       // Register new user if user does not exist.
       if (!$this->checkUserExists()) {
-
-        // Start Session if it does not exist yet.
-        $user_registered = FALSE;
-
         // Check if custom email has been set.
         $custom_email = $this->custom_data_store->get('custom_email');
         if (empty($custom_email)) {
-          $this->custom_data_store->set('return_url', \Drupal::destination()->get());
+          $this->custom_data_store->set('return_url', \Drupal::request()->getRequestUri());
           // Redirect to email form if custom email has not been set.
           $response = new RedirectResponse(Url::fromRoute('shibauth8.custom_email_form')
             ->toString());
