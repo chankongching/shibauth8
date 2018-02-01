@@ -53,7 +53,7 @@ shibauth8.logout_controller_logout_error_page:
   requirements:
     _permission: 'access content'
 
-shibauth8.custom_email_form:
+shibauth8.custom_data_form:
   path: '/shib_login/get_custom_data'
   defaults:
     _form: '\Drupal\shibauth8\Form\CustomDataForm'

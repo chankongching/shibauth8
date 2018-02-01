@@ -10,7 +10,6 @@ namespace Drupal\shibauth8\Login;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\SessionManagerInterface;
@@ -115,7 +114,7 @@ class LoginHandler implements LoginHandlerInterface {
         if (empty($custom_email)) {
           $this->custom_data_store->set('return_url', \Drupal::request()->getRequestUri());
           // Redirect to email form if custom email has not been set.
-          $response = new RedirectResponse(Url::fromRoute('shibauth8.custom_email_form')
+          $response = new RedirectResponse(Url::fromRoute('shibauth8.custom_data_form')
             ->toString());
           return $response;
         }

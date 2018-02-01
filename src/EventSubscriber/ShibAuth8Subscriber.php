@@ -39,7 +39,7 @@ class ShibAuth8Subscriber implements EventSubscriberInterface {
    */
   public function __construct(LoginHandler $lh){
     $this->lh = $lh;
-    $this->excluded_routes = array('shibauth8.custom_email_form');
+    $this->excluded_routes = array('shibauth8.custom_data_form');
   }
 
   /**
