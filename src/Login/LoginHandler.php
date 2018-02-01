@@ -109,9 +109,15 @@ class LoginHandler implements LoginHandlerInterface {
     try {
       // Register new user if user does not exist.
       if (!$this->checkUserExists()) {
+
+        // Use the Shib email, if we've got it.
+        if (!empty($this->shib_session->getEmail())) {
+          // Add custom Email to the session.
+          $this->custom_data_store->set('custom_email', $this->shib_session->getEmail());
+        }
+
         // Check if custom email has been set.
-        $custom_email = $this->custom_data_store->get('custom_email');
-        if (empty($custom_email)) {
+        if (!$this->custom_data_store->get('custom_email')) {
           $this->custom_data_store->set('return_url', \Drupal::request()->getRequestUri());
           // Redirect to email form if custom email has not been set.
           $response = new RedirectResponse(Url::fromRoute('shibauth8.custom_data_form')
@@ -121,6 +127,7 @@ class LoginHandler implements LoginHandlerInterface {
         else {
           $user_registered = $this->registerNewUser();
         }
+
       }
       else {
         $user_registered = TRUE;
