@@ -9,9 +9,6 @@ namespace Drupal\shibauth8\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\shibauth8\Login\LoginHandler;
 
 /**
