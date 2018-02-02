@@ -50,19 +50,6 @@ class ShibAuth8Subscriber implements EventSubscriberInterface {
     // Show debug messages, if needed.
     shibauth8_debug();
 
-    // Check if there is currently an active shibboleth session.
-    // Don't initiate session on the excluded urls.
-    $cur_route = \Drupal::routeMatch()->getRouteName();
-
-    if (!in_array($cur_route, $this->excluded_routes)) {
-      if (!empty($this->lh->getShibSession()->getSessionId())) {
-        // Check if there is an active drupal login.
-        if (\Drupal::currentUser()->isAnonymous()) {
-          // Call the shib login function in the login handler class.
-          $this->lh->shibLogin();
-        }
-      }
-    }
   }
 
   /**
