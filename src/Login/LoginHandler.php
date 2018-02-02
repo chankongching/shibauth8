@@ -74,6 +74,11 @@ class LoginHandler implements LoginHandlerInterface {
    */
   protected $current_user;
 
+  /**
+   * @var string
+   */
+  protected $error_message;
+
 
   /**
    * LoginHandler constructor.
@@ -140,10 +145,20 @@ class LoginHandler implements LoginHandlerInterface {
 
     }
     catch (\Exception $e) {
-      // Log the error to drupal log messages.
+      // Log the error to Drupal log messages.
       $this->shib_logger->error($e);
-      // Kill the drupal session.
-      user_logout();
+
+      $user = \Drupal::currentUser();
+      if ($user->isAuthenticated()) {
+        // Kill the drupal session.
+        // @todo - Do we need to kill the session for anonymous users, too? If so, how do we set the error message?
+        user_logout();
+      }
+
+      if ($this->getErrorMessage()) {
+        drupal_set_message($this->getErrorMessage(), 'error');
+      }
+
       $return_url = '';
       if ($this->adv_config->get('url_redirect_logout')) {
         $return_url = '?return=' . $this->adv_config->get('url_redirect_logout');
@@ -173,28 +188,48 @@ class LoginHandler implements LoginHandlerInterface {
       'status' => 1,
     ];
 
-    // Create Drupal user.
-    $this->user = $this->user_store->create($user_data);
-    $results = $this->user->save();
+    try {
 
-    // Throw exception if drupal user creation fails.
-    if (!$results) {
-      throw new \Exception('Error creating new drupal user from Shibboleth Session');
+      // Create Drupal user.
+      $this->user = $this->user_store->create($user_data);
+      if (!$results = $this->user->save()) {
+        // Throw exception if Drupal user creation fails.
+        throw new \Exception();
+      }
+
+    }
+    catch (\Exception $e) {
+      if ($e->getCode() == 23000) {
+        $this->setErrorMessage(t('There was an error creating your user. A user with your email address already exists.'));
+        throw new \Exception('Error creating new Drupal user from Shibboleth Session. Duplicate user row.');
+      }
+      else {
+        $this->setErrorMessage(t('There was an error creating your user.'));
+        throw new \Exception('Error creating new Drupal user from Shibboleth Session.');
+      }
     }
 
-    // Insert shib data into shib_authmap table.
-    $shib_data = [
-      'uid' => $this->user->id(),
-      'targeted_id' => $this->shib_session->getTargetedId(),
-      'idp' => $this->shib_session->getIdp(),
-      'created' => REQUEST_TIME,
-    ];
-    $success = $this->db->insert('shib_authmap')->fields($shib_data)->execute();
+    try {
 
-    // Throw exception if shib_authmap insert fails.
-    if (!$success) {
-      throw new \Exception('Error creating new drupal user from Shibboleth Session. Database insert on shib_authmap failed');
+      // Insert shib data into shib_authmap table.
+      $shib_data = [
+        'uid' => $this->user->id(),
+        'targeted_id' => $this->shib_session->getTargetedId(),
+        'idp' => $this->shib_session->getIdp(),
+        'created' => REQUEST_TIME,
+      ];
+
+      if (!$success = $this->db->insert('shib_authmap')->fields($shib_data)->execute()) {
+        // Throw exception if shib_authmap insert fails.
+        throw new \Exception();
+      }
+
     }
+    catch (\Exception $e) {
+      $this->setErrorMessage(t('There was an error creating your user.'));
+      throw new \Exception('Error creating new Drupal user from Shibboleth Session. Database insert on shib_authmap failed.');
+    }
+
     return TRUE;
   }
 
@@ -206,7 +241,8 @@ class LoginHandler implements LoginHandlerInterface {
    */
   private function authenticateUser() {
     if (empty($this->user)) {
-      throw new \Exception('No uid found for user when trying to initialize drupal session');
+      $this->setErrorMessage(t('There was an error logging you in.'));
+      throw new \Exception('No uid found for user when trying to initialize Drupal session.');
     }
     user_login_finalize($this->user);
     return TRUE;
@@ -230,19 +266,21 @@ class LoginHandler implements LoginHandlerInterface {
     }
 
     if (count($results) > 1) {
-      throw new \Exception('Multiple entries for a user exist in the shib_authmap table');
+      $this->setErrorMessage(t('There was an error logging you in.'));
+      throw new \Exception('Multiple entries for a user exist in the shib_authmap table.');
     }
 
     $this->user = User::load($results[0]->uid);
 
     if (empty($this->user)) {
-      throw new \Exception('User information exists in shib_authmap table, but drupal user does not exist');
+      $this->setErrorMessage(t('There was an error logging you in.'));
+      throw new \Exception('User information exists in shib_authmap table, but Drupal user does not exist.');
     }
     return TRUE;
   }
 
   /**
-   * Generate a random password for the drupal user account.
+   * Generate a random password for the Drupal user account.
    *
    * @return string
    */
@@ -256,6 +294,14 @@ class LoginHandler implements LoginHandlerInterface {
    */
   public function getShibSession() {
     return $this->shib_session;
+  }
+
+  private function setErrorMessage($message) {
+    $this->error_message = $message;
+  }
+
+  private function getErrorMessage() {
+    return $this->error_message;
   }
 
 }
