@@ -168,6 +168,8 @@ class ShibbolethSettings extends ConfigFormBase {
       ->set('debug_prefix_path', $form_state->getValue('debug_prefix_path'))
       ->save();
 
+    // Invalidate the cache for the Shib login block.
+    \Drupal::service('cache_tags.invalidator')->invalidateTags(['shibboleth_login_block']);
 
   }
 

@@ -157,5 +157,9 @@ class AdvancedSettings extends ConfigFormBase {
 //      ->set('enable_passive_authentication', $form_state->getValue('enable_passive_authentication'))
 //      ->set('enable_forced_authentication', $form_state->getValue('enable_forced_authentication'))
       ->save();
+
+    // Invalidate the cache for the Shib login block.
+    \Drupal::service('cache_tags.invalidator')->invalidateTags(['shibboleth_login_block']);
+
   }
 }

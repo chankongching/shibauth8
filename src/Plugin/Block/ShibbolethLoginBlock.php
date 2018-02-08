@@ -8,6 +8,7 @@
 namespace Drupal\shibauth8\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Provides a 'ShibbolethLoginBlock' block.
@@ -54,6 +55,13 @@ class ShibbolethLoginBlock extends BlockBase {
 
     return $build;
 
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return Cache::mergeTags(parent::getCacheTags(), ['shibboleth_login_block']);
   }
 
 }
