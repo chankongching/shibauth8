@@ -64,12 +64,20 @@ function shibauth8_get_login_link() {
     // Not set, use current page.
     $redirect = \Drupal\Core\Url::fromRoute('<current>')->toString();
   }
+  if ($force_https) {
+    $redirect = preg_replace('~^http://~', 'https://', $redirect);
+  }
+
   $options = [
     'absolute' => TRUE,
     'query' => [
       'destination' => $redirect,
     ],
   ];
+
+  if ($force_https) {
+    $options['https'] = TRUE;
+  }
 
   // This is the callback to process the Shib login with the destination for
   // the redirect when done.
