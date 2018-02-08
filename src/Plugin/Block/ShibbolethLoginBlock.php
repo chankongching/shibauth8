@@ -48,8 +48,8 @@ class ShibbolethLoginBlock extends BlockBase {
     if (!$config->get('url_redirect_login')) {
       // Redirect is not set, so it will use the current path. That means it
       // will differ per page.
-      $build['shibboleth_login_block']['#cache']['#cache']['contexts'][] = 'url.path';
-      $build['shibboleth_login_block']['#cache']['#cache']['contexts'][] = 'url.query_args';
+      $build['shibboleth_login_block']['#cache']['contexts'][] = 'url.path';
+      $build['shibboleth_login_block']['#cache']['contexts'][] = 'url.query_args';
     }
 
     return $build;
