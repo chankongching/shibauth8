@@ -79,6 +79,10 @@ class LoginHandler implements LoginHandlerInterface {
    */
   protected $error_message;
 
+  /**
+   * MySQL error code.
+   */
+  const MYSQL_ER_DUP_KEY = 23000;
 
   /**
    * LoginHandler constructor.
@@ -199,7 +203,7 @@ class LoginHandler implements LoginHandlerInterface {
 
     }
     catch (\Exception $e) {
-      if ($e->getCode() == 23000) {
+      if ($e->getCode() == self::MYSQL_ER_DUP_KEY) {
         $this->setErrorMessage(t('There was an error creating your user. A user with your email address already exists.'));
         throw new \Exception('Error creating new Drupal user from Shibboleth Session. Duplicate user row.');
       }
