@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class ShibAuth8Subscriber
@@ -32,6 +34,36 @@ class ShibAuth8Subscriber implements EventSubscriberInterface {
    */
   public function __construct(LoginHandler $lh){
     $this->lh = $lh;
+
+//$tmp = $lh->getShibSession();
+//\Drupal::logger('shibauth8')->notice('<pre>' . print_r($tmp, TRUE) . '</pre>');
+
+    // \Drupal::logger('shiauth8')->notice('<pre>' . print_r($this->lh, TRUE) . '</pre>');
+  }
+
+  /**
+   * Login-- Processes Drupal login, then redirects.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   */
+  public function checkShibbolethLogin(GetResponseEvent $event) {
+\Drupal::logger('shibauth8')->notice("checkShibbolethLogin");
+    if (!empty($this->lh->getShibSession()->getSessionId())) {
+      // Check if there is an active drupal login.
+      if (\Drupal::currentUser()->isAnonymous()) {
+        // Call the shib login function in the login handler class.
+        if ($response = $this->lh->shibLogin()) {
+          // We need to remove the destination or it will redirect to that
+          // rather than where we actually want to go.
+          \Drupal::request()->query->remove('destination');
+          return $response;
+        }
+      }
+    }
+
+    // Will redirect to ?destination by default.
+    $url = \Drupal\Core\Url::fromRoute('<front>')->toString();
+    return new RedirectResponse($url);
   }
 
   /**
@@ -86,6 +118,8 @@ class ShibAuth8Subscriber implements EventSubscriberInterface {
     else {
       $session_copy = [];
     }
+
+
     if (isset($session_copy['messages'])) {
       unset($session_copy['messages']);
     }
@@ -114,6 +148,7 @@ class ShibAuth8Subscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
+$events[KernelEvents::REQUEST][] = array('checkShibbolethLogin', 27);
     $events[KernelEvents::REQUEST][] = array('checkForShibbolethDebug', 28);
     return $events;
   }

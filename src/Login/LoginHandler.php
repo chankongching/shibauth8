@@ -114,6 +114,7 @@ class LoginHandler implements LoginHandlerInterface {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
   public function shibLogin() {
+    // \Drupal::logger('shibauth8')->notice('<pre>' . print_r($this->custom_data_store, TRUE) . '</pre>');
 
     try {
       // Register new user if user does not exist.
@@ -134,7 +135,35 @@ class LoginHandler implements LoginHandlerInterface {
           return $response;
         }
         else {
-          $user_registered = $this->registerNewUser();
+          if($user_exist = user_load_by_name($this->shib_session->getTargetedId()))
+          {
+            //update shib_authmap table
+            try {
+
+              // Insert shib data into shib_authmap table.
+              $shib_data = [
+                  'uid' => $user_exist->id(),
+                  'targeted_id' => $this->shib_session->getTargetedId(),
+                  'idp' => $this->shib_session->getIdp(),
+                  'created' => REQUEST_TIME,
+              ];
+
+              if (!$success = $this->db->insert('shib_authmap')->fields($shib_data)->execute()) {
+                // Throw exception if shib_authmap insert fails.
+                throw new \Exception();
+              }
+
+            }
+            catch (\Exception $e) {
+              $this->setErrorMessage(t('There was an error creating your user.'));
+              throw new \Exception('Error creating new Drupal user from Shibboleth Session. Database insert on shib_authmap failed.');
+            }
+
+            $user_registered = TRUE;
+
+          }else{
+            $user_registered = $this->registerNewUser();
+          }
         }
 
       }
@@ -244,6 +273,7 @@ class LoginHandler implements LoginHandlerInterface {
    * @throws \Exception
    */
   private function authenticateUser() {
+    \Drupal::logger('shibauth8')->notice('<pre>' . print_r($this->user, TRUE) . '</pre>');
     if (empty($this->user)) {
       $this->setErrorMessage(t('There was an error logging you in.'));
       throw new \Exception('No uid found for user when trying to initialize Drupal session.');
